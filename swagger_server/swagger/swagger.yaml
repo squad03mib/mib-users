@@ -1,0 +1,362 @@
+openapi: 3.0.1
+info:
+  title: Users Service API
+  description: Users Microservice of Message in a Bottle Application
+  version: "0.1"
+servers:
+- url: /
+paths:
+  /users:
+    get:
+      tags:
+      - User
+      description: Get all users list
+      operationId: mib_resources_users_get_all_user
+      responses:
+        "200":
+          description: Return users list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User_Listitem'
+                x-content-type: application/json
+        default:
+          description: An error occured during retrieving the user
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+    post:
+      tags:
+      - User
+      summary: Add a new user
+      operationId: mib_resources_users_create_user
+      requestBody:
+        description: Create a new customer inside microservice app
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "200":
+          description: User already exists
+        "201":
+          description: Created
+        default:
+          description: Error during creation of the user
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+  /users/{user_id}:
+    get:
+      tags:
+      - User
+      description: Get a user by its id
+      operationId: mib_resources_users_get_user
+      parameters:
+      - name: user_id
+        in: path
+        description: User Unique ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Return user
+        "404":
+          description: User not found
+        default:
+          description: An error occured during retrieving the user
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+    delete:
+      tags:
+      - User
+      description: Delete a user by its id
+      operationId: mib_resources_users_delete_user
+      parameters:
+      - name: user_id
+        in: path
+        description: User Unique ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "202":
+          description: User deleted
+        "404":
+          description: User not found
+        default:
+          description: An error occured during the deletion the user
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+  /user_email/{user_email}:
+    get:
+      tags:
+      - User
+      description: Get a user by its email
+      operationId: mib_resources_users_get_user_by_email
+      parameters:
+      - name: user_email
+        in: path
+        description: User Unique Email
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Return user
+        "404":
+          description: User not found
+        default:
+          description: An error occured during retrieving the user
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+  /authenticate:
+    post:
+      tags:
+      - User
+      summary: Authenticate a user
+      operationId: mib_resources_auth_authenticate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authenticate_body'
+        required: true
+      responses:
+        "200":
+          description: User credentials are correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: User credentials are not correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        default:
+          description: An error occured during login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_default'
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+  /users/{user_id}/blacklist:
+    get:
+      tags:
+      - User
+      description: Get the blacklist of a user
+      operationId: mib_resources_users_get_blacklist
+      parameters:
+      - name: user_id
+        in: path
+        description: User Unique ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Return blacklist
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User_Listitem'
+                x-content-type: application/json
+        default:
+          description: An error occured during retrieving the blacklist
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+    post:
+      tags:
+      - User
+      summary: Add a new user to the blacklist
+      operationId: mib_resources_users_add_to_blacklist
+      parameters:
+      - name: user_id
+        in: path
+        description: User Unique ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Add a new user to the blacklist
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_Listitem'
+        required: true
+      responses:
+        "200":
+          description: User already in the blacklist
+        "201":
+          description: Added
+        default:
+          description: Error during adding the user to the blacklist
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+  /users/{user_id}/report:
+    get:
+      tags:
+      - User
+      description: Get the list of reported users
+      operationId: mib_resources_users_get_report
+      parameters:
+      - name: user_id
+        in: path
+        description: User Unique ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Return the list of reported users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User_Listitem'
+                x-content-type: application/json
+        default:
+          description: An error occured during retrieving the list of reported users
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+    post:
+      tags:
+      - User
+      summary: Report a user
+      operationId: mib_resources_users_add_to_report
+      parameters:
+      - name: user_id
+        in: path
+        description: User Unique ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Add a new user to the list of reported users
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_Listitem'
+        required: true
+      responses:
+        "200":
+          description: User already reported
+        "201":
+          description: Added
+        default:
+          description: Error during reporting a user
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+components:
+  schemas:
+    User:
+      required:
+      - birthdate
+      - email
+      - firstname
+      - lastname
+      type: object
+      properties:
+        firstname:
+          type: string
+          description: First name of customer
+          example: Mario
+        lastname:
+          type: string
+          description: Last name of customer
+          example: Rossi
+        email:
+          type: string
+          description: Customer email
+          format: email
+          example: mario.rossi@example.org
+        password:
+          maxLength: 127
+          minLength: 5
+          type: string
+          description: Customer password
+          example: abcd1234
+        birthdate:
+          type: string
+          description: Customer birthdate
+          format: date
+          example: 2020-01-01
+      example:
+        firstname: Mario
+        password: abcd1234
+        birthdate: 2020-01-01T00:00:00.000+00:00
+        email: mario.rossi@example.org
+        lastname: Rossi
+    User_Listitem:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id of customer
+          example: 0
+      example:
+        id: 0
+    authenticate_body:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@studenti.unipi.it
+        password:
+          type: string
+          example: abcd123A
+      x-body-name: auth
+    inline_response_200:
+      type: object
+      properties:
+        authentication:
+          type: string
+          description: It can be failure or success
+          default: failure
+        user:
+          $ref: '#/components/schemas/User'
+      example:
+        user:
+          firstname: Mario
+          password: abcd1234
+          birthdate: 2020-01-01T00:00:00.000+00:00
+          email: mario.rossi@example.org
+          lastname: Rossi
+        authentication: failure
+    inline_response_400:
+      type: object
+      properties:
+        authentication:
+          type: string
+          description: It can be failure or success
+          default: failure
+    inline_response_default:
+      type: object
+      properties:
+        error_message:
+          type: string
+
