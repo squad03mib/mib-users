@@ -23,6 +23,8 @@ class TestUserController(BaseTestCase):
         Authenticate a user
         """
         body = AuthenticateBody()
+        body.email = "helo@helo.com"
+        body.password = "2"
         response = self.client.open(
             '/authenticate',
             method='POST',
@@ -37,8 +39,9 @@ class TestUserController(BaseTestCase):
         Add a new user to the blacklist
         """
         body = UserListitem()
+        body.id = 5
         response = self.client.open(
-            '/users/{user_id}/blacklist'.format(user_id=789),
+            '/users/1/blacklist',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
@@ -51,6 +54,7 @@ class TestUserController(BaseTestCase):
         Report a user
         """
         body = UserListitem()
+        body.id = 5
         response = self.client.open(
             '/users/{user_id}/report'.format(user_id=789),
             method='POST',
@@ -65,6 +69,11 @@ class TestUserController(BaseTestCase):
         Add a new user
         """
         body = User()
+        body.birthdate = "2020-01-01T00:00:00+00:00"
+        body.email = "fake@gm.com"
+        body.firstname = "gg"
+        body.lastname = "gg"
+        body.password = "succhiamelo"
         response = self.client.open(
             '/users',
             method='POST',

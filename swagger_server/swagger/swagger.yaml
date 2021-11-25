@@ -329,7 +329,6 @@ components:
         password:
           type: string
           example: abcd123A
-      x-body-name: auth
     inline_response_200:
       type: object
       properties:
