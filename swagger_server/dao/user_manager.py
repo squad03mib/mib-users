@@ -19,11 +19,6 @@ class UserManager(Manager):
         return User.query.filter(User.email == email).first()
     
     @staticmethod
-    def retrieve_by_phone(phone):
-        Manager.check_none(phone=phone)
-        return User.query.filter(User.phone == phone).first()
-
-    @staticmethod
     def update_user(user: User):
         Manager.update(user=user)
 
