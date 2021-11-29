@@ -43,7 +43,7 @@ def create_app():
 
     # getting the flask app
     app = api_app.app
-
+    app.json_encoder = encoder.JSONEncoder
     flask_env = os.getenv('FLASK_ENV', 'None')
     if flask_env == 'development':
         config_object = 'config.DevConfig'
@@ -65,13 +65,13 @@ def create_app():
     )
 
     # requiring the list of models
-    import swagger_server.models_db
+    from swagger_server.models_db.user import User
 
     # checking the environment
     if flask_env == 'testing':
         # we need to populate the db
         db.create_all()
-
+    print("db inizializzato ", db)
     # registering to api app all specifications
     register_specifications(api_app)
 

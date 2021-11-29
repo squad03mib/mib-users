@@ -25,7 +25,20 @@ def mib_resources_auth_authenticate(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = AuthenticateBody.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    user = UserManager.retrieve_by_email(body.email)
+    response = {
+        'authentication': 'failure',
+        'user': None
+    }
+    response_code = 401
+
+    if user and user.authenticate(body.password):
+        response['authentication'] = 'success'
+        response['user'] = user.serialize()
+        response_code = 200
+
+    return response
 
 
 def mib_resources_users_add_to_blacklist(body, user_id):  # noqa: E501

@@ -24,6 +24,7 @@ class DevConfig(DebugConfig):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+
 class TestConfig(Config):
     """
     This is the main configuration object for application.
@@ -32,10 +33,10 @@ class TestConfig(Config):
 
     import os
     SECRET_KEY = os.urandom(24)
-    WTF_CSRF_ENABLED = False
+
 
     SQLALCHEMY_ECHO = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../db_test.sqlite'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
@@ -59,4 +60,3 @@ class ProdConfig(DevConfig):
     SQLALCHEMY_DATABASE_URI = 'postgres://%s:%s@%s:%s/%s' % (
         POSTGRES_USER, POSTGRES_PASS, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-

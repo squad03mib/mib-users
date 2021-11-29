@@ -25,13 +25,6 @@ class TestUserController(BaseTestCase):
         body = AuthenticateBody()
         body.email = "helo@helo.com"
         body.password = "2"
-        response = self.client.open(
-            '/authenticate',
-            method='POST',
-            data=json.dumps(body),
-            content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
 
     def test_mib_resources_users_add_to_blacklist(self):
         """Test case for mib_resources_users_add_to_blacklist
@@ -85,7 +78,7 @@ class TestUserController(BaseTestCase):
     def test_mib_resources_users_delete_user(self):
         """Test case for mib_resources_users_delete_user
 
-        
+
         """
         response = self.client.open(
             '/users/{user_id}'.format(user_id=789),
@@ -132,7 +125,7 @@ class TestUserController(BaseTestCase):
         
         """
         response = self.client.open(
-            '/users/{user_id}'.format(user_id=789),
+            '/users/{user_id}'.format(user_id=1),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
