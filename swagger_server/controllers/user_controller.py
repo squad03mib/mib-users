@@ -53,6 +53,9 @@ def mib_resources_users_create_user(body):  # noqa: E501
     if connexion.request.is_json:
         body = UserSchema.from_dict(connexion.request.get_json())  # noqa: E501
 
+    if UserManager.retrieve_by_email(body.email) is not None:
+        return 403
+
     user = User()
     user.set_email(body.email)
     user.set_password(body.password)
@@ -79,7 +82,13 @@ def mib_resources_users_delete_user(user_id):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    user = UserManager.retrieve_by_id(user_id)
+    if user is not None:
+        user.is_active = False
+        UserManager.update_user(user)
+        return Response(status=200)
+
+    return Response(status=404)
 
 
 def mib_resources_users_get_all_user():  # noqa: E501
