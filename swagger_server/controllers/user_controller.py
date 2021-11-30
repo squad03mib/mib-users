@@ -31,48 +31,13 @@ def mib_resources_auth_authenticate(body):  # noqa: E501
         'authentication': 'failure',
         'user': None
     }
-    response_code = 401
-
+    status_code = 401
     if user and user.authenticate(body.password):
         response['authentication'] = 'success'
         response['user'] = user.serialize()
-        response_code = 200
+        status_code = 200
 
-    return response
-
-
-def mib_resources_users_add_to_blacklist(body, user_id):  # noqa: E501
-    """Add a new user to the blacklist
-
-     # noqa: E501
-
-    :param body: Add a new user to the blacklist
-    :type body: dict | bytes
-    :param user_id: User Unique ID
-    :type user_id: int
-
-    :rtype: None
-    """
-    if connexion.request.is_json:
-        body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
-
-
-def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
-    """Report a user
-
-     # noqa: E501
-
-    :param body: Add a new user to the list of reported users
-    :type body: dict | bytes
-    :param user_id: User Unique ID
-    :type user_id: int
-
-    :rtype: None
-    """
-    if connexion.request.is_json:
-        body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    return Response(status=status_code, response=response)
 
 
 def mib_resources_users_create_user(body):  # noqa: E501
