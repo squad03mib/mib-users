@@ -23,7 +23,8 @@ services:
       build:
         context: .
         dockerfile: Dockerfile 
-
+    volumes:
+    - .:/app
     ports:
      - "5000:5000"
     env_file:

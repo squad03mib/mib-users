@@ -24,6 +24,7 @@ class DevConfig(DebugConfig):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../db_dev.sqlite'
 
 class TestConfig(Config):
     """
