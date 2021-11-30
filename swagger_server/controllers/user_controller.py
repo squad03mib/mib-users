@@ -11,6 +11,7 @@ from swagger_server.models.user import User as UserSchema
 from swagger_server.models.user_listitem import UserListitem  # noqa: E501
 from swagger_server import util
 from swagger_server.dao.user_manager import UserManager
+from flask import jsonify, Response
 
 
 def mib_resources_auth_authenticate(body):  # noqa: E501
@@ -18,7 +19,7 @@ def mib_resources_auth_authenticate(body):  # noqa: E501
 
      # noqa: E501
 
-    :param body: 
+    :param body:
     :type body: dict | bytes
 
     :rtype: InlineResponse200
@@ -99,33 +100,9 @@ def mib_resources_users_get_all_user():  # noqa: E501
 
     :rtype: List[UserListitem]
     """
-    return 'do some magic!'
+    list = UserManager.list_active_users()
 
-
-def mib_resources_users_get_blacklist(user_id):  # noqa: E501
-    """mib_resources_users_get_blacklist
-
-    Get the blacklist of a user # noqa: E501
-
-    :param user_id: User Unique ID
-    :type user_id: int
-
-    :rtype: List[UserListitem]
-    """
-    return 'do some magic!'
-
-
-def mib_resources_users_get_report(user_id):  # noqa: E501
-    """mib_resources_users_get_report
-
-    Get the list of reported users # noqa: E501
-
-    :param user_id: User Unique ID
-    :type user_id: int
-
-    :rtype: List[UserListitem]
-    """
-    return 'do some magic!'
+    return [user.serialize() for user in list]
 
 
 def mib_resources_users_get_user(user_id):  # noqa: E501
@@ -150,5 +127,68 @@ def mib_resources_users_get_user_by_email(user_email):  # noqa: E501
     :type user_email: str
 
     :rtype: None
+    """
+    user = UserManager.retrieve_by_email(user_email)
+    if user is not None:
+        return user
+    return 404
+
+
+def mib_resources_users_add_to_blacklist(body, user_id):  # noqa: E501
+    """Add a new user to the blacklist
+
+     # noqa: E501
+
+    :param body: Add a new user to the blacklist
+    :type body: dict | bytes
+    :param user_id: User Unique ID
+    :type user_id: int
+
+    :rtype: None
+    """
+    if connexion.request.is_json:
+        body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
+    return 'do some magic!'
+
+
+def mib_resources_users_get_blacklist(user_id):  # noqa: E501
+    """mib_resources_users_get_blacklist
+
+    Get the blacklist of a user # noqa: E501
+
+    :param user_id: User Unique ID
+    :type user_id: int
+
+    :rtype: List[UserListitem]
+    """
+    return 'do some magic!'
+
+
+def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
+    """Report a user
+
+     # noqa: E501
+
+    :param body: Add a new user to the list of reported users
+    :type body: dict | bytes
+    :param user_id: User Unique ID
+    :type user_id: int
+
+    :rtype: None
+    """
+    if connexion.request.is_json:
+        body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
+    return 'do some magic!'
+
+
+def mib_resources_users_get_report(user_id):  # noqa: E501
+    """mib_resources_users_get_report
+
+    Get the list of reported users # noqa: E501
+
+    :param user_id: User Unique ID
+    :type user_id: int
+
+    :rtype: List[UserListitem]
     """
     return 'do some magic!'

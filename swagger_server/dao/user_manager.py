@@ -1,3 +1,4 @@
+from os import stat
 from swagger_server.dao.manager import Manager
 from swagger_server.models_db.user import User
 
@@ -17,7 +18,7 @@ class UserManager(Manager):
     def retrieve_by_email(email):
         Manager.check_none(email=email)
         return User.query.filter(User.email == email).first()
-    
+
     @staticmethod
     def update_user(user: User):
         Manager.update(user=user)
@@ -30,3 +31,9 @@ class UserManager(Manager):
     def delete_user_by_id(id_: int):
         user = UserManager.retrieve_by_id(id_)
         UserManager.delete_user(user)
+
+    @staticmethod
+    def list_active_users():
+        users = User.query.filter(User.is_active.is_(True)).all()
+        return users
+
