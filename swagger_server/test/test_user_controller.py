@@ -44,6 +44,16 @@ class TestUserController(BaseTestCase):
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+        self.assertIn(b"prova", response.data)
+
+        auth.password = "1234"
+        response = self.client.open(
+            '/authenticate',
+            method='POST',
+            data=json.dumps(auth),
+            content_type='application/json')
+        self.assert401(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
 
     def test_mib_resources_users_create_user(self):
         """Test case for mib_resources_users_create_user
@@ -55,7 +65,7 @@ class TestUserController(BaseTestCase):
         body.email = "fake@gm.com"
         body.firstname = "gg"
         body.lastname = "gg"
-        body.password = "succhiamelo"
+        body.password = "password"
         response = self.client.open(
             '/users',
             method='POST',
@@ -64,6 +74,15 @@ class TestUserController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
         self.assertIn("fake@gm.com", response.data.decode('utf-8'))
+
+        # retry to create a user with same mail
+        response = self.client.open(
+            '/users',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert403(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
 
     def test_mib_resources_users_get_user(self):
         """Test case for mib_resources_users_get_user
@@ -76,15 +95,42 @@ class TestUserController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+        response = self.client.open(
+            '/users/{user_id}'.format(user_id=789),
+            method='GET')
+        self.assert404(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
     def test_mib_resources_users_get_user_by_email(self):
         """Test case for mib_resources_users_get_user_by_email
 
 
         """
+        body = User()
+        body.birthdate = "2020-01-01T00:00:00+00:00"
+        body.email = "getuseremail@gm.com"
+        body.firstname = "gg"
+        body.lastname = "gg"
+        body.password = "password"
         response = self.client.open(
-            '/user_email/{user_email}'.format(user_email='user_email_example'),
+            '/users',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        response = self.client.open(
+            '/user_email/{user_email}'.format(user_email=body.email),
             method='GET')
         self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        response = self.client.open(
+            '/user_email/{user_email}'.format(
+                user_email="notexisting@gmail.com"),
+            method='GET')
+        self.assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
     def test_mib_resources_users_delete_user(self):
@@ -97,6 +143,13 @@ class TestUserController(BaseTestCase):
             method='DELETE')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+
+        response = self.client.open(
+            '/users/{user_id}'.format(user_id=345),
+            method='DELETE')
+        self.assert404(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
 
     def test_mib_resources_users_get_all_user(self):
         """Test case for mib_resources_users_get_all_user
@@ -116,10 +169,10 @@ class TestUserController(BaseTestCase):
 
         """
         response = self.client.open(
-            '/users/{user_id}/blacklist'.format(user_id=789),
+            '/users/{user_id}/blacklist'.format(user_id=1),
             method='GET')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assert_200(response,
+                        'Response body is : ' + response.data.decode('utf-8'))
 
     def test_mib_resources_users_add_to_blacklist(self):
         """Test case for mib_resources_users_add_to_blacklist

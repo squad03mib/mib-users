@@ -1,8 +1,6 @@
 from typing import List
 import connexion
 from swagger_server.models.authenticate_body import AuthenticateBody  # noqa: E501
-from swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
-from swagger_server.models.inline_response400 import InlineResponse400  # noqa: E501
 from swagger_server.models.inline_response_default import InlineResponseDefault  # noqa: E501
 from swagger_server.models_db.user import User  # noqa: E501
 from swagger_server.models_db.blacklist import Blacklist
@@ -37,7 +35,7 @@ def mib_resources_auth_authenticate(body):  # noqa: E501
         response['user'] = user.serialize()
         status_code = 200
 
-    return Response(status=status_code, response=response)
+    return response, status_code
 
 
 def mib_resources_users_create_user(body):  # noqa: E501
@@ -54,7 +52,7 @@ def mib_resources_users_create_user(body):  # noqa: E501
         body = UserSchema.from_dict(connexion.request.get_json())  # noqa: E501
 
     if UserManager.retrieve_by_email(body.email) is not None:
-        return 403
+        return Response(status=403)
 
     user = User()
     user.set_email(body.email)
@@ -63,13 +61,7 @@ def mib_resources_users_create_user(body):  # noqa: E501
     user.set_last_name(body.lastname)
     UserManager.create_user(user)
 
-    response_object = {
-        'user': user.serialize(),
-        'status': 'success',
-        'message': 'Successfully registered',
-    }
-
-    return response_object
+    return user.serialize()
 
 
 def mib_resources_users_delete_user(user_id):  # noqa: E501
@@ -114,7 +106,10 @@ def mib_resources_users_get_user(user_id):  # noqa: E501
 
     :rtype: None
     """
-    return UserManager.retrieve_by_id(user_id).serialize()
+    user = UserManager.retrieve_by_id(user_id)
+    if user is not None:
+        return user.serialize()
+    return Response(status=404)
 
 
 def mib_resources_users_get_user_by_email(user_email):  # noqa: E501
@@ -129,8 +124,8 @@ def mib_resources_users_get_user_by_email(user_email):  # noqa: E501
     """
     user = UserManager.retrieve_by_email(user_email)
     if user is not None:
-        return user
-    return 404
+        return user.serialize()
+    return Response(status=404)
 
 
 def mib_resources_users_add_to_blacklist(body, user_id):  # noqa: E501
@@ -191,7 +186,7 @@ def mib_resources_users_get_blacklist(user_id):  # noqa: E501
     if blacklist is []:
         return jsonify({'status': 'Empty blacklist'}), 200
 
-    return [item.serialize() for item in blacklist], 201
+    return [item.serialize() for item in blacklist]
 
 
 def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
