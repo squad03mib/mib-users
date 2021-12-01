@@ -1,17 +1,16 @@
+from typing import List
 import connexion
-import six
-import datetime
-
 from swagger_server.models.authenticate_body import AuthenticateBody  # noqa: E501
 from swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
 from swagger_server.models.inline_response400 import InlineResponse400  # noqa: E501
 from swagger_server.models.inline_response_default import InlineResponseDefault  # noqa: E501
 from swagger_server.models_db.user import User  # noqa: E501
+from swagger_server.models_db.blacklist import Blacklist
 from swagger_server.models.user import User as UserSchema
 from swagger_server.models.user_listitem import UserListitem  # noqa: E501
 from swagger_server import util
 from swagger_server.dao.user_manager import UserManager
-from flask import jsonify, Response
+from flask import jsonify, Response, abort
 
 
 def mib_resources_auth_authenticate(body):  # noqa: E501
@@ -146,9 +145,30 @@ def mib_resources_users_add_to_blacklist(body, user_id):  # noqa: E501
 
     :rtype: None
     """
+
     if connexion.request.is_json:
         body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    user = UserManager.retrieve_by_id(user_id)
+
+    if user is None:
+        return abort(404)
+
+    list = UserManager.retrieve_blacklist(user_id)
+    elem = UserManager.retrieve_blacklisted_user(
+        user_id, body.id)
+
+    if list is [] or elem is None:
+        blacklist = Blacklist()
+        blacklist.id_user = user_id
+        blacklist.id_blacklisted = body.id
+        UserManager.create_blacklist(blacklist)
+    elif elem is not None:
+        return jsonify({'status': 'User already in blacklist'}), 200
+
+    list = UserManager.retrieve_blacklist(user_id)
+
+    return [item.serialize() for item in list], 200
 
 
 def mib_resources_users_get_blacklist(user_id):  # noqa: E501
@@ -161,7 +181,17 @@ def mib_resources_users_get_blacklist(user_id):  # noqa: E501
 
     :rtype: List[UserListitem]
     """
-    return 'do some magic!'
+    user = UserManager.retrieve_by_id(user_id)
+
+    if user is None:
+        return abort(404)
+
+    blacklist = UserManager.retrieve_blacklist(user_id)
+
+    if blacklist is []:
+        return jsonify({'status': 'Empty blacklist'}), 200
+
+    return [item.serialize() for item in blacklist], 201
 
 
 def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
