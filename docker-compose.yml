@@ -17,24 +17,39 @@ services:
       - env_file
 
   mib_users:
-    <<: &mib_users
+    <<:
       # Building the image
+      &mib_users
       image: "mib-users:latest"
       build:
         context: .
-        dockerfile: Dockerfile 
+        dockerfile: Dockerfile
     volumes:
-    - .:/app
+      - .:/app
     ports:
-     - "5000:5000"
+      - "5000:5000"
     env_file:
       - env_file
     environment:
       - POSTGRES_HOST=db
     depends_on:
       - db
-      - migrations
+      - migrations_users
+
+  migrations_users:
+    #
+    # this service is used to apply migrations on db
+    #
+    <<: *mib_users
+    command: flask db upgrade
+    env_file:
+      - env_file
+    environment:
+      - POSTGRES_HOST=db
+    restart: on-failure
+    depends_on:
+      - db
 
 # Declaring all volumes
 volumes:
-  pgdata: # for maintaing db data
+  pgdata: null # for maintaing db data
