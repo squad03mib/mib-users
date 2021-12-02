@@ -6,6 +6,7 @@ from swagger_server.models.inline_response400 import InlineResponse400  # noqa: 
 from swagger_server.models.inline_response_default import InlineResponseDefault  # noqa: E501
 from swagger_server.models_db.user import User  # noqa: E501
 from swagger_server.models_db.blacklist import Blacklist
+from swagger_server.models_db.report import Report
 from swagger_server.models.user import User as UserSchema
 from swagger_server.models.user_listitem import UserListitem  # noqa: E501
 from swagger_server import util
@@ -150,8 +151,9 @@ def mib_resources_users_add_to_blacklist(body, user_id):  # noqa: E501
         body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
 
     user = UserManager.retrieve_by_id(user_id)
+    user_blacklisted = UserManager.retrieve_by_id(body.id)
 
-    if user is None:
+    if user is None or user_blacklisted is None:
         return abort(404)
 
     list = UserManager.retrieve_blacklist(user_id)
@@ -206,9 +208,31 @@ def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
 
     :rtype: None
     """
+
     if connexion.request.is_json:
         body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    user = UserManager.retrieve_by_id(user_id)
+    user_reported = UserManager.retrieve_by_id(body.id)
+
+    if user is None or user_reported is None:
+        return abort(404)
+
+    list = UserManager.retrieve_report(user_id)
+    elem = UserManager.retrieve_reported_user(
+        user_id, body.id)
+
+    if list is [] or elem is None:
+        report = Report()
+        report.id_user = user_id
+        report.id_reported = body.id
+        UserManager.create_report(report)
+    elif elem is not None:
+        return jsonify({'status': 'User already reported'}), 200
+
+    list = UserManager.retrieve_report(user_id)
+
+    return [item.serialize() for item in list], 200
 
 
 def mib_resources_users_get_report(user_id):  # noqa: E501
@@ -221,4 +245,14 @@ def mib_resources_users_get_report(user_id):  # noqa: E501
 
     :rtype: List[UserListitem]
     """
-    return 'do some magic!'
+    user = UserManager.retrieve_by_id(user_id)
+
+    if user is None:
+        return abort(404)
+
+    report = UserManager.retrieve_report(user_id)
+
+    if report is []:
+        return jsonify({'status': 'Empty report'}), 200
+
+    return [item.serialize() for item in report], 201

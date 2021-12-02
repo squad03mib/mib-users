@@ -2,6 +2,7 @@ from os import stat
 from swagger_server.dao.manager import Manager
 from swagger_server.models_db.user import User
 from swagger_server.models_db.blacklist import Blacklist
+from swagger_server.models_db.report import Report
 
 
 class UserManager(Manager):
@@ -57,3 +58,19 @@ class UserManager(Manager):
     @staticmethod
     def delete_blacklist(blacklist: Blacklist):
         Manager.delete(blacklist=blacklist)
+
+    @staticmethod
+    def create_report(report: Report):
+        Manager.create(report=report)
+
+    @staticmethod
+    def retrieve_report(id_user_: int):
+        return Report.query.filter(Report.id_user == id_user_).all()
+
+    @staticmethod
+    def retrieve_reported_user(id_user, id_reported):
+        return Report.query.filter(Report.id_user == id_user).filter(Report.id_reported == id_reported).first()
+
+    @staticmethod
+    def update_report(report: Report):
+        Manager.update(report=report)
