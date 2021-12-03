@@ -67,6 +67,7 @@ def create_app():
     # requiring the list of models
     from swagger_server.models_db.user import User
     from swagger_server.models_db.blacklist import Blacklist
+    from swagger_server.models_db.report import Report
 
     # creating migrate
     migrate = Migrate(

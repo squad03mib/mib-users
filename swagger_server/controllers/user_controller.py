@@ -160,8 +160,6 @@ def mib_resources_users_add_to_blacklist(body, user_id):  # noqa: E501
         blacklist.id_user = user_id
         blacklist.id_blacklisted = body.id
         UserManager.create_blacklist(blacklist)
-    elif elem is not None:
-        return jsonify({'status': 'User already in blacklist'}), 200
 
     list = UserManager.retrieve_blacklist(user_id)
 
@@ -184,9 +182,6 @@ def mib_resources_users_get_blacklist(user_id):  # noqa: E501
         return abort(404)
 
     blacklist = UserManager.retrieve_blacklist(user_id)
-
-    if blacklist is []:
-        return jsonify({'status': 'Empty blacklist'}), 200
 
     return [item.serialize() for item in blacklist]
 
@@ -222,8 +217,6 @@ def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
         report.id_user = user_id
         report.id_reported = body.id
         UserManager.create_report(report)
-    elif elem is not None:
-        return jsonify({'status': 'User already reported'}), 200
 
     list = UserManager.retrieve_report(user_id)
 
@@ -247,7 +240,4 @@ def mib_resources_users_get_report(user_id):  # noqa: E501
 
     report = UserManager.retrieve_report(user_id)
 
-    if report is []:
-        return jsonify({'status': 'Empty report'}), 200
-
-    return [item.serialize() for item in report], 201
+    return [item.serialize() for item in report]

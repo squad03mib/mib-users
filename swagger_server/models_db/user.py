@@ -40,9 +40,6 @@ class User(db.Model):
     def set_last_name(self, name):
         self.last_name = name
 
-    def is_authenticated(self):
-        return self.authenticated
-
     def authenticate(self, password):
         checked = check_password_hash(self.password, password)
         self.authenticated = checked
