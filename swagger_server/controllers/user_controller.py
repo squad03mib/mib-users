@@ -36,7 +36,7 @@ def mib_resources_auth_authenticate(body):  # noqa: E501
         response['user'] = user.serialize()
         status_code = 200
 
-    return response, status_code
+    return jsonify(response), status_code
 
 
 def mib_resources_users_create_user(body):  # noqa: E501
@@ -62,7 +62,7 @@ def mib_resources_users_create_user(body):  # noqa: E501
     user.set_last_name(body.lastname)
     UserManager.create_user(user)
 
-    return user.serialize()
+    return user.serialize(), 201
 
 
 def mib_resources_users_delete_user(user_id):  # noqa: E501
