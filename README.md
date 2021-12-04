@@ -1,3 +1,4 @@
+[![squad03mib](https://circleci.com/gh/squad03mib/mib-users.svg?style=svg)](https://app.circleci.com/pipelines/github/squad03mib/mib-users/2/workflows/c940e655-c0d4-4a43-b09a-0dd5bf839206/jobs/3)
 # Swagger generated server
 
 ## Overview
