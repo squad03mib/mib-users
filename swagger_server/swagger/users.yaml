@@ -92,6 +92,36 @@ paths:
         default:
           description: An error occured during the deletion the user
       x-openapi-router-controller: swagger_server.controllers.user_controller
+    put:
+      tags:
+      - User
+      summary: Update the user
+      operationId: mib_resources_users_update_user
+      parameters:
+      - name: user_id
+        in: path
+        description: User Unique ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+
+      requestBody:
+        description: Create a new customer inside microservice app
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "201":
+          description: Created
+        default:
+          description: Error during update of the user
+      x-openapi-router-controller: swagger_server.controllers.user_controller
+ 
   /user_email/{user_email}:
     get:
       tags:

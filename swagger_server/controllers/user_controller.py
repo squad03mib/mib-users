@@ -39,6 +39,18 @@ def mib_resources_auth_authenticate(body):  # noqa: E501
     return jsonify(response), status_code
 
 
+def mib_resources_users_update_user(user_id,body):  # noqa: E501
+    if connexion.request.is_json:
+        body = UserSchema.from_dict(connexion.request.get_json())  # noqa: E501
+    user = UserManager.retrieve_by_id(user_id)
+    if user is not None:
+        user.set_email(body.email)
+        user.set_password(body.password)
+        user.set_first_name(body.firstname)
+        user.set_last_name(body.lastname)
+        UserManager.update_user(user)
+
+
 def mib_resources_users_create_user(body):  # noqa: E501
     """Add a new user
 
@@ -126,7 +138,7 @@ def mib_resources_users_get_user_by_email(user_email):  # noqa: E501
     user = UserManager.retrieve_by_email(user_email)
     if user is not None:
         return user.serialize()
-    return Response(status=404)
+    return {},404 
 
 
 def mib_resources_users_add_to_blacklist(body, user_id):  # noqa: E501
