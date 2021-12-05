@@ -11,7 +11,7 @@ class User(db.Model):
 
     # A list of fields to be serialized
     SERIALIZE_LIST = ['id', 'email', 'is_active',
-                      'authenticated', 'is_anonymous']
+                      'authenticated', 'is_anonymous', 'first_name', 'last_name', 'date_of_birth']
 
     # All fields of user
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -19,6 +19,7 @@ class User(db.Model):
     first_name = db.Column(db.Unicode(128), nullable=False, unique=False)
     last_name = db.Column(db.Unicode(128), nullable=False, unique=False)
     password = db.Column(db.Unicode(128))
+    date_of_birth = db.Column(db.Date())
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
     authenticated = db.Column(db.Boolean, default=True)
@@ -39,6 +40,9 @@ class User(db.Model):
 
     def set_last_name(self, name):
         self.last_name = name
+
+    def set_date_of_birth(self, date):
+        self.date_of_birth = date
 
     def authenticate(self, password):
         checked = check_password_hash(self.password, password)
