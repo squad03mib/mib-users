@@ -26,6 +26,10 @@ class UserManager(Manager):
         Manager.update(user=user)
 
     @staticmethod
+    def delete_user(user: User):
+        Manager.delete(user=user)
+        
+    @staticmethod
     def list_active_users():
         users = User.query.filter(User.is_active.is_(True)).filter(
             User.is_reported.is_(False)).all()

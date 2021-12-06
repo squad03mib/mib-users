@@ -89,7 +89,7 @@ def mib_resources_users_delete_user(user_id):  # noqa: E501
     user = UserManager.retrieve_by_id(user_id)
     if user is not None:
         user.is_active = False
-        UserManager.update_user(user)
+        UserManager.delete_user(user)
         return Response(status=200)
 
     return Response(status=404)
@@ -153,8 +153,7 @@ def mib_resources_users_add_to_blacklist(body, user_id):  # noqa: E501
     :rtype: None
     """
 
-    if connexion.request.is_json:
-        body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
+    body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
 
     if user_id == body.id:
         return abort(404)
