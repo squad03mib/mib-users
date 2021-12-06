@@ -29,8 +29,8 @@ class TestUserController(BaseTestCase):
             method='POST',
             data=json.dumps(body.to_dict()),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertStatus(response, 201,
+                          'Response body is : ' + response.data.decode('utf-8'))
 
         auth = AuthenticateBody()
         auth.email = body.email
@@ -70,8 +70,8 @@ class TestUserController(BaseTestCase):
             method='POST',
             data=json.dumps(body.to_dict()),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertStatus(response, 201,
+                          'Response body is : ' + response.data.decode('utf-8'))
         self.assertIn("fake@gm.com", response.data.decode('utf-8'))
 
         # retry to create a user with same mail
@@ -100,6 +100,30 @@ class TestUserController(BaseTestCase):
         self.assert404(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+    def test_mib_resources_users_update_user(self):
+        body = User()
+        body.birthdate = "2020-01-01T00:00:00+00:00"
+        body.email = "update@gm.com"
+        body.firstname = "gg"
+        body.lastname = "gg"
+        body.password = "password"
+        response = self.client.open(
+            '/users',
+            method='POST',
+            data=json.dumps(body.to_dict()),
+            content_type='application/json')
+        self.assertStatus(response, 201,
+                          'Response body is : ' + response.data.decode('utf-8'))
+        self.assertIn("update@gm.com", response.data.decode('utf-8'))
+        id_user = json.loads(response.data.decode('utf-8'))['id']
+        body.email = "update2@gm.com"
+        response = self.client.open(
+            '/users/{user_id}'.format(user_id=id_user),
+            data=json.dumps(body.to_dict()),
+            method='PUT',
+            content_type='application/json')
+        self.assert200(response, "response is: "+response.data.decode('utf-8'))
+
     def test_mib_resources_users_get_user_by_email(self):
         """Test case for mib_resources_users_get_user_by_email
 
@@ -116,8 +140,8 @@ class TestUserController(BaseTestCase):
             method='POST',
             data=json.dumps(body.to_dict()),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        self.assertStatus(response, 201,
+                          'Response body is : ' + response.data.decode('utf-8'))
 
         response = self.client.open(
             '/user_email/{user_email}'.format(user_email=body.email),
@@ -160,8 +184,8 @@ class TestUserController(BaseTestCase):
             method='POST',
             data=json.dumps(user1.to_dict()),
             content_type='application/json')
-        self.assert200(response1,
-                       'Response body is : ' + response1.data.decode('utf-8'))
+        self.assertStatus(response1, 201,
+                          'Response body is : ' + response1.data.decode('utf-8'))
 
         user2 = User()
         user2.birthdate = "2020-01-01T00:00:00+00:00"
@@ -174,8 +198,8 @@ class TestUserController(BaseTestCase):
             method='POST',
             data=json.dumps(user2.to_dict()),
             content_type='application/json')
-        self.assert200(response2,
-                       'Response body is : ' + response2.data.decode('utf-8'))
+        self.assertStatus(response2, 201,
+                          'Response body is : ' + response2.data.decode('utf-8'))
 
         id_user = json.loads(response1.data.decode('utf-8'))
         id_blacklisted = json.loads(response2.data.decode('utf-8'))
@@ -229,8 +253,8 @@ class TestUserController(BaseTestCase):
             method='POST',
             data=json.dumps(user1.to_dict()),
             content_type='application/json')
-        self.assert200(response1,
-                       'Response body is : ' + response1.data.decode('utf-8'))
+        self.assertStatus(response1, 201,
+                          'Response body is : ' + response1.data.decode('utf-8'))
 
         user2 = User()
         user2.birthdate = "2020-01-01T00:00:00+00:00"
@@ -243,8 +267,8 @@ class TestUserController(BaseTestCase):
             method='POST',
             data=json.dumps(user2.to_dict()),
             content_type='application/json')
-        self.assert200(response2,
-                       'Response body is : ' + response2.data.decode('utf-8'))
+        self.assertStatus(response2, 201,
+                          'Response body is : ' + response2.data.decode('utf-8'))
 
         id_user = json.loads(response1.data.decode('utf-8'))
         id_reported = json.loads(response2.data.decode('utf-8'))

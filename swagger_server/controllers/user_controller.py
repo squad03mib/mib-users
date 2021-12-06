@@ -51,7 +51,7 @@ def mib_resources_users_update_user(user_id, body):  # noqa: E501
         user.set_first_name(body.firstname)
         user.set_last_name(body.lastname)
         UserManager.update_user(user)
-
+    return 200
 
 def mib_resources_users_create_user(body):  # noqa: E501
     """Add a new user
@@ -266,7 +266,7 @@ def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
         report.id_reported = body.id
         UserManager.create_report(report)
 
-    num_reports = len(UserManager.retrieve_num_reports(user_reported))
+    num_reports = len(UserManager.retrieve_num_reports(report.id_reported))
 
     if num_reports == NUM_REPORTS:
         user_reported.set_is_reported()
