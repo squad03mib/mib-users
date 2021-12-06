@@ -36,6 +36,10 @@ class UserManager(Manager):
         Manager.create(blacklist=blacklist)
 
     @staticmethod
+    def delete_blacklist(blacklist: Blacklist):
+        Manager.delete(blacklist=blacklist)
+
+    @staticmethod
     def retrieve_blacklist(id_user_: int):
         return Blacklist.query.filter(Blacklist.id_user == id_user_).all()
 

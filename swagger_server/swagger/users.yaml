@@ -236,6 +236,39 @@ paths:
         default:
           description: Error during adding the user to the blacklist
       x-openapi-router-controller: swagger_server.controllers.user_controller
+  /users/{user_id}/blacklist/{blacklisted_id}:
+    delete:
+      tags:
+      - User
+      description: Delete a user from the blacklist
+      operationId: mib_resources_users_delete_user_from_blacklist
+      parameters:
+      - name: user_id
+        in: path
+        description: User Unique ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: blacklisted_id
+        in: path
+        description: User Unique ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "202":
+          description: User deleted
+        "404":
+          description: User not found
+        default:
+          description: An error occured during the deletion the user from the blacklist
+      x-openapi-router-controller: swagger_server.controllers.user_controller
   /users/{user_id}/report:
     get:
       tags:
