@@ -11,6 +11,8 @@ from swagger_server import util
 from swagger_server.dao.user_manager import UserManager
 from flask import jsonify, Response, abort
 
+NUM_REPORTS = 2
+
 
 def mib_resources_auth_authenticate(body):  # noqa: E501
     """Authenticate a user
@@ -217,6 +219,9 @@ def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
     if connexion.request.is_json:
         body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
 
+    if user_id == body.id:
+        return abort(404)
+
     user = UserManager.retrieve_by_id(user_id)
     user_reported = UserManager.retrieve_by_id(body.id)
 
@@ -232,6 +237,12 @@ def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
         report.id_user = user_id
         report.id_reported = body.id
         UserManager.create_report(report)
+
+    num_reports = len(UserManager.retrieve_num_reports(user_reported))
+
+    if num_reports == NUM_REPORTS:
+        user_reported.set_is_reported()
+        UserManager.update_user(user_reported)
 
     list = UserManager.retrieve_report(user_id)
 

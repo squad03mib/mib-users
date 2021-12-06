@@ -21,6 +21,7 @@ class User(db.Model):
     password = db.Column(db.Unicode(128))
     date_of_birth = db.Column(db.Date())
     is_active = db.Column(db.Boolean, default=True)
+    is_reported = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
     authenticated = db.Column(db.Boolean, default=True)
     is_anonymous = False
@@ -43,6 +44,9 @@ class User(db.Model):
 
     def set_date_of_birth(self, date):
         self.date_of_birth = date
+
+    def set_is_reported(self):
+        self.is_reported = True
 
     def authenticate(self, password):
         checked = check_password_hash(self.password, password)

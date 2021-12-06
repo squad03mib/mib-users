@@ -19,7 +19,7 @@ class UserManager(Manager):
     @staticmethod
     def retrieve_by_email(email):
         Manager.check_none(email=email)
-        return User.query.filter(User.email == email).first()
+        return User.query.filter(User.email == email).filter(User.is_reported.is_(False)).first()
 
     @staticmethod
     def update_user(user: User):
@@ -27,7 +27,8 @@ class UserManager(Manager):
 
     @staticmethod
     def list_active_users():
-        users = User.query.filter(User.is_active.is_(True)).all()
+        users = User.query.filter(User.is_active.is_(True)).filter(
+            User.is_reported.is_(False)).all()
         return users
 
     @staticmethod
@@ -49,6 +50,10 @@ class UserManager(Manager):
     @staticmethod
     def retrieve_report(id_user_: int):
         return Report.query.filter(Report.id_user == id_user_).all()
+
+    @staticmethod
+    def retrieve_num_reports(id_user_: int):
+        return Report.query.filter(Report.id_reported == id_user_).all()
 
     @staticmethod
     def retrieve_reported_user(id_user, id_reported):
