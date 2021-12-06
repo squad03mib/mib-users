@@ -24,8 +24,7 @@ def mib_resources_auth_authenticate(body):  # noqa: E501
 
     :rtype: InlineResponse200
     """
-    if connexion.request.is_json:
-        body = AuthenticateBody.from_dict(connexion.request.get_json())  # noqa: E501
+    body = AuthenticateBody.from_dict(connexion.request.get_json())  # noqa: E501
 
     user = UserManager.retrieve_by_email(body.email)
     response = {
@@ -42,8 +41,7 @@ def mib_resources_auth_authenticate(body):  # noqa: E501
 
 
 def mib_resources_users_update_user(user_id, body):  # noqa: E501
-    if connexion.request.is_json:
-        body = UserSchema.from_dict(connexion.request.get_json())  # noqa: E501
+    body = UserSchema.from_dict(connexion.request.get_json())  # noqa: E501
     user = UserManager.retrieve_by_id(user_id)
     if user is not None:
         user.set_email(body.email)
@@ -63,8 +61,7 @@ def mib_resources_users_create_user(body):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = UserSchema.from_dict(connexion.request.get_json())  # noqa: E501
+    body = UserSchema.from_dict(connexion.request.get_json())  # noqa: E501
 
     if UserManager.retrieve_by_email(body.email) is not None:
         return Response(status=403)
