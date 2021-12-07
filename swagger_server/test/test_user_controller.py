@@ -19,7 +19,7 @@ class TestUserController(BaseTestCase):
         Authenticate a user
         """
         body = User()
-        body.birthdate = "2020-01-01T00:00:00+00:00"
+        body.birthdate = '2020-01-01'
         body.email = "prova@gm.com"
         body.firstname = "gg"
         body.lastname = "gg"
@@ -60,7 +60,7 @@ class TestUserController(BaseTestCase):
         Add a new user
         """
         body = User()
-        body.birthdate = "2020-01-01T00:00:00+00:00"
+        body.birthdate = '2020-01-01'
         body.email = "fake@gm.com"
         body.firstname = "gg"
         body.lastname = "gg"
@@ -102,7 +102,7 @@ class TestUserController(BaseTestCase):
 
     def test_mib_resources_users_update_user(self):
         body = User()
-        body.birthdate = "2020-01-01T00:00:00+00:00"
+        body.birthdate = '2020-01-01'
         body.email = "update@gm.com"
         body.firstname = "gg"
         body.lastname = "gg"
@@ -138,7 +138,7 @@ class TestUserController(BaseTestCase):
 
         """
         body = User()
-        body.birthdate = "2020-01-01T00:00:00+00:00"
+        body.birthdate = '2020-01-01'
         body.email = "getuseremail@gm.com"
         body.firstname = "gg"
         body.lastname = "gg"
@@ -182,7 +182,7 @@ class TestUserController(BaseTestCase):
         Add a new user to the blacklist
         """
         user1 = User()
-        user1.birthdate = "2020-01-01T00:00:00+00:00"
+        user1.birthdate = '2020-01-01'
         user1.email = "user1@gm.com"
         user1.firstname = "gg"
         user1.lastname = "gg"
@@ -196,7 +196,7 @@ class TestUserController(BaseTestCase):
                           'Response body is : ' + response1.data.decode('utf-8'))
 
         user2 = User()
-        user2.birthdate = "2020-01-01T00:00:00+00:00"
+        user2.birthdate = '2020-01-01'
         user2.email = "user2@gm.com"
         user2.firstname = "gg"
         user2.lastname = "gg"
@@ -251,7 +251,7 @@ class TestUserController(BaseTestCase):
         """
 
         user1 = User()
-        user1.birthdate = "2020-01-01T00:00:00+00:00"
+        user1.birthdate = '2020-01-01'
         user1.email = "usr1@gm.com"
         user1.firstname = "gg"
         user1.lastname = "gg"
@@ -265,7 +265,7 @@ class TestUserController(BaseTestCase):
                           'Response body is : ' + response1.data.decode('utf-8'))
 
         user2 = User()
-        user2.birthdate = "2020-01-01T00:00:00+00:00"
+        user2.birthdate = '2020-01-01'
         user2.email = "usr2@gm.com"
         user2.firstname = "gg"
         user2.lastname = "gg"

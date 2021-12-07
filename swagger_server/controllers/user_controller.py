@@ -10,6 +10,7 @@ from swagger_server.models.user_listitem import UserListitem  # noqa: E501
 from swagger_server import util
 from swagger_server.dao.user_manager import UserManager
 from flask import jsonify, Response, abort
+from datetime import datetime
 
 NUM_REPORTS = 2
 
@@ -48,7 +49,8 @@ def mib_resources_users_update_user(user_id, body):  # noqa: E501
         user.set_password(body.password)
         user.set_first_name(body.firstname)
         user.set_last_name(body.lastname)
-        user.set_date_of_birth(body.birthdate)
+        date_ = datetime.strptime(body.birthdate, '%Y-%m-%d').date()
+        user.set_date_of_birth(date_)
         UserManager.update_user(user)
     return 200
 
@@ -72,7 +74,8 @@ def mib_resources_users_create_user(body):  # noqa: E501
     user.set_password(body.password)
     user.set_first_name(body.firstname)
     user.set_last_name(body.lastname)
-    user.set_date_of_birth(body.birthdate)
+    date_ = datetime.strptime(body.birthdate, '%Y-%m-%d').date()
+    user.set_date_of_birth(date_)
     UserManager.create_user(user)
 
     return user.serialize(), 201
