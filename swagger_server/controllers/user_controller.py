@@ -245,8 +245,7 @@ def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
     :rtype: None
     """
 
-    if connexion.request.is_json:
-        body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
+    body = UserListitem.from_dict(connexion.request.get_json())  # noqa: E501
 
     if user_id == body.id:
         return abort(404)

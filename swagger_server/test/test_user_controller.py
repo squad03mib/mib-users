@@ -209,7 +209,22 @@ class TestUserController(BaseTestCase):
         self.assertStatus(response2, 201,
                           'Response body is : ' + response2.data.decode('utf-8'))
 
+        user3 = User()
+        user3.birthdate = '2020-01-01'
+        user3.email = "user3@gm.com"
+        user3.firstname = "gg"
+        user3.lastname = "gg"
+        user3.password = "1234ABCD"
+        response3 = self.client.open(
+            '/users',
+            method='POST',
+            data=json.dumps(user3.to_dict()),
+            content_type='application/json')
+        self.assertStatus(response3, 201,
+                          'Response body is : ' + response3.data.decode('utf-8'))
+
         id_user = json.loads(response1.data.decode('utf-8'))
+        id_user3 = json.loads(response3.data.decode('utf-8'))
         id_blacklisted = json.loads(response2.data.decode('utf-8'))
 
         body = UserListitem()
@@ -218,6 +233,37 @@ class TestUserController(BaseTestCase):
             '/users/{user_id}/blacklist'.format(
                 user_id=id_user['id']),
             method='POST',
+            data=json.dumps(body.to_dict()),
+            content_type='application/json')
+        assert response.status_code == 200
+
+        body.id = id_user3['id']
+        response = self.client.open(
+            '/users/{user_id}/blacklist'.format(
+                user_id=id_user3['id']),
+            method='POST',
+            data=json.dumps(body.to_dict()),
+            content_type='application/json')
+        assert response.status_code == 404
+
+        response = self.client.open(
+            '/users/{user_id}/blacklist'.format(
+                user_id=id_user['id']),
+            method='POST',
+            data=json.dumps(body.to_dict()),
+            content_type='application/json')
+        assert response.status_code == 200
+
+        response = self.client.open(
+            '/users/{user_id}/blacklist'.format(user_id=id_user['id']),
+            method='GET')
+        self.assert_200(response,
+                        'Response body is : ' + response.data.decode('utf-8'))
+
+        response = self.client.open(
+            '/users/{user_id}/blacklist/{blacklisted_id}'.format(
+                user_id=id_user['id'], blacklisted_id=id_blacklisted['id']),
+            method='DELETE',
             data=json.dumps(body.to_dict()),
             content_type='application/json')
         assert response.status_code == 200
@@ -232,11 +278,6 @@ class TestUserController(BaseTestCase):
             content_type='application/json')
         assert response.status_code == 404
 
-        response = self.client.open(
-            '/users/{user_id}/blacklist'.format(user_id=id_user['id']),
-            method='GET')
-        self.assert_200(response,
-                        'Response body is : ' + response.data.decode('utf-8'))
 
         response = self.client.open(
             '/users/{user_id}/blacklist'.format(user_id=999),
@@ -278,7 +319,22 @@ class TestUserController(BaseTestCase):
         self.assertStatus(response2, 201,
                           'Response body is : ' + response2.data.decode('utf-8'))
 
+        user3 = User()
+        user3.birthdate = '2020-01-01'
+        user3.email = "user33@gm.com"
+        user3.firstname = "gg"
+        user3.lastname = "gg"
+        user3.password = "1234ABCD"
+        response3 = self.client.open(
+            '/users',
+            method='POST',
+            data=json.dumps(user3.to_dict()),
+            content_type='application/json')
+        self.assertStatus(response3, 201,
+                          'Response body is : ' + response3.data.decode('utf-8'))
+
         id_user = json.loads(response1.data.decode('utf-8'))
+        id_user3 = json.loads(response3.data.decode('utf-8'))
         id_reported = json.loads(response2.data.decode('utf-8'))
 
         body = UserListitem()
@@ -290,6 +346,24 @@ class TestUserController(BaseTestCase):
             data=json.dumps(body.to_dict()),
             content_type='application/json')
         assert response.status_code == 200
+
+        body.id = id_reported['id']
+        response = self.client.open(
+            '/users/{user_id}/report'.format(
+                user_id=id_user3['id']),
+            method='POST',
+            data=json.dumps(body.to_dict()),
+            content_type='application/json')
+        assert response.status_code == 200
+
+        body.id = id_user3['id']
+        response = self.client.open(
+            '/users/{user_id}/report'.format(
+                user_id=id_user3['id']),
+            method='POST',
+            data=json.dumps(body.to_dict()),
+            content_type='application/json')
+        assert response.status_code == 404
 
         body = UserListitem()
         body.id = 999
