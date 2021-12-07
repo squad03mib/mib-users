@@ -48,6 +48,7 @@ def mib_resources_users_update_user(user_id, body):  # noqa: E501
         user.set_password(body.password)
         user.set_first_name(body.firstname)
         user.set_last_name(body.lastname)
+        user.set_date_of_birth(body.birthdate)
         UserManager.update_user(user)
     return 200
 
@@ -71,6 +72,7 @@ def mib_resources_users_create_user(body):  # noqa: E501
     user.set_password(body.password)
     user.set_first_name(body.firstname)
     user.set_last_name(body.lastname)
+    user.set_date_of_birth(body.birthdate)
     UserManager.create_user(user)
 
     return user.serialize(), 201

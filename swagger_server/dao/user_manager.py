@@ -28,7 +28,7 @@ class UserManager(Manager):
     @staticmethod
     def delete_user(user: User):
         Manager.delete(user=user)
-        
+
     @staticmethod
     def list_active_users():
         users = User.query.filter(User.is_active.is_(True)).filter(
