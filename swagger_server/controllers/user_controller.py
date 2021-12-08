@@ -45,13 +45,12 @@ def mib_resources_users_update_user(user_id, body):  # noqa: E501
     body = UserSchema.from_dict(connexion.request.get_json())  # noqa: E501
     user = UserManager.retrieve_by_id(user_id)
     if user is not None:
-        user.set_email(body.email)
-        user.set_password(body.password)
-        user.set_first_name(body.firstname)
-        user.set_last_name(body.lastname)
         date_ = datetime.strptime(body.birthdate, '%Y-%m-%d').date()
-        user.set_date_of_birth(date_)
-        UserManager.update_user(user)
+        user_dict = dict(email=body.email,
+        password = body.password,
+        firstname=body.firstname, lastname=body.lastname,
+        date_of_birth=date_)
+        UserManager.update_user(user_dict)
     return 200
 
 def mib_resources_users_create_user(body):  # noqa: E501
@@ -269,7 +268,7 @@ def mib_resources_users_add_to_report(body, user_id):  # noqa: E501
     num_reports = len(UserManager.retrieve_num_reports(report.id_reported))
 
     if num_reports == NUM_REPORTS:
-        user_reported.set_is_reported()
+        user_reported = dict(email=user_reported.email,is_reported=True)
         UserManager.update_user(user_reported)
 
     list = UserManager.retrieve_report(user_id)

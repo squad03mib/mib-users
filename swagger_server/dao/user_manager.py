@@ -3,6 +3,8 @@ from swagger_server.dao.manager import Manager
 from swagger_server.models_db.user import User
 from swagger_server.models_db.blacklist import Blacklist
 from swagger_server.models_db.report import Report
+from swagger_server import db
+
 
 
 class UserManager(Manager):
@@ -22,8 +24,10 @@ class UserManager(Manager):
         return User.query.filter(User.email == email).filter(User.is_reported.is_(False)).first()
 
     @staticmethod
-    def update_user(user: User):
-        Manager.update(user=user)
+    def update_user(user):
+        res = db.session.query(User).filter(user["email"] == User.email).update(user)
+        print(res)
+        db.session.commit()
 
     @staticmethod
     def delete_user(user: User):
