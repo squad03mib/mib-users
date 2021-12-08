@@ -11,7 +11,8 @@ class User(db.Model):
 
     # A list of fields to be serialized
     SERIALIZE_LIST = ['id', 'email', 'is_active',
-                      'authenticated', 'is_anonymous', 'firstname', 'lastname', 'date_of_birth']
+                      'authenticated', 'is_anonymous', 'firstname',
+                      'lastname', 'date_of_birth','is_reported']
 
     # All fields of user
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
