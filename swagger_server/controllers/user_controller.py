@@ -94,7 +94,7 @@ def mib_resources_users_delete_user(user_id):  # noqa: E501
     user = UserManager.retrieve_by_id(user_id)
     if user is not None:
         user.is_active = False
-        UserManager.delete_user(user)
+        UserManager.delete_user(user_id)
         return Response(status=200)
 
     return Response(status=404)

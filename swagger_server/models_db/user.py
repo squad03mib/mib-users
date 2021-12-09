@@ -16,7 +16,7 @@ class User(db.Model):
 
     # All fields of user
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.Unicode(128), nullable=False, unique=True)
+    email = db.Column(db.Unicode(128), nullable=False)
     firstname = db.Column(db.Unicode(128), nullable=False, unique=False)
     lastname = db.Column(db.Unicode(128), nullable=False, unique=False)
     password = db.Column(db.Unicode(128))
@@ -52,7 +52,7 @@ class User(db.Model):
     def authenticate(self, password):
         checked = check_password_hash(self.password, password)
         self.authenticated = checked
-        return self.authenticated
+        return self.is_active and self.authenticated
 
     def serialize(self):
         return dict([(k, self.__getattribute__(k)) for k in self.SERIALIZE_LIST])

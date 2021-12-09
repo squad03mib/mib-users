@@ -15,7 +15,8 @@ class UserManager(Manager):
     @staticmethod
     def retrieve_by_id(id_):
         Manager.check_none(id=id_)
-        return User.query.get(id_)
+        return User.query.filter(User.id== id_).filter(
+            User.is_reported.is_(False)).first()
 
     @staticmethod
     def retrieve_by_email(email):
@@ -27,12 +28,13 @@ class UserManager(Manager):
     def update_user(user):
         res = db.session.query(User).filter(
             user["email"] == User.email).update(user)
-        print(res)
         db.session.commit()
 
     @staticmethod
-    def delete_user(user: User):
-        Manager.delete(user=user)
+    def delete_user(user_id):
+        res = db.session.query(User).filter(
+            user_id == User.id).update({"is_active":False})
+        db.session.commit()
 
     @staticmethod
     def list_active_users():

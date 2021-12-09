@@ -115,7 +115,7 @@ class TestUserController(BaseTestCase):
         self.assertStatus(response, 201,
                           'Response body is : ' + response.data.decode('utf-8'))
         self.assertIn("update@gm.com", response.data.decode('utf-8'))
-        
+
         id_user = json.loads(response.data.decode('utf-8'))['id']
         body.email = "update2@gm.com"
         response = self.client.open(
@@ -124,13 +124,6 @@ class TestUserController(BaseTestCase):
             method='PUT',
             content_type='application/json')
         self.assert200(response, "response is: "+response.data.decode('utf-8'))
-
-    def test_mib_resources_delete_user(self):
-        response = self.client.open(
-            '/users/{user_id}'.format(user_id=1),
-            method='DELETE',
-            content_type='application/json')
-        self.assert200(response)
 
     def test_mib_resources_users_get_user_by_email(self):
         """Test case for mib_resources_users_get_user_by_email
@@ -285,7 +278,6 @@ class TestUserController(BaseTestCase):
             data=json.dumps(body.to_dict()),
             content_type='application/json')
         assert response.status_code == 404
-
 
         response = self.client.open(
             '/users/{user_id}/blacklist'.format(user_id=999),
