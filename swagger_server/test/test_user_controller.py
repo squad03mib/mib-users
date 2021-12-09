@@ -237,6 +237,14 @@ class TestUserController(BaseTestCase):
             content_type='application/json')
         assert response.status_code == 200
 
+        response = self.client.open(
+            '/users/{user_id}/blacklist'.format(
+                user_id=id_user['id']),
+            method='POST',
+            data=json.dumps(body.to_dict()),
+            content_type='application/json')
+        assert response.status_code == 200
+
         body.id = id_user3['id']
         response = self.client.open(
             '/users/{user_id}/blacklist'.format(
