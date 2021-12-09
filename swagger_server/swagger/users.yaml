@@ -353,7 +353,6 @@ components:
           example: mario.rossi@example.org
         password:
           maxLength: 127
-          minLength: 5
           type: string
           description: Customer password
           example: abcd1234

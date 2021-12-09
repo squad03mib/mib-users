@@ -47,9 +47,10 @@ def mib_resources_users_update_user(user_id, body):  # noqa: E501
     if user is not None:
         date_ = datetime.strptime(body.birthdate, '%Y-%m-%d').date()
         user_dict = dict(email=body.email,
-        password = body.password,
         firstname=body.firstname, lastname=body.lastname,
         date_of_birth=date_)
+        if body.password != "":
+            user_dict["password"]=body.password
         UserManager.update_user(user_dict)
     return 200
 

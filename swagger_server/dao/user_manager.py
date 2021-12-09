@@ -6,7 +6,6 @@ from swagger_server.models_db.report import Report
 from swagger_server import db
 
 
-
 class UserManager(Manager):
 
     @staticmethod
@@ -21,11 +20,13 @@ class UserManager(Manager):
     @staticmethod
     def retrieve_by_email(email):
         Manager.check_none(email=email)
-        return User.query.filter(User.email == email).filter(User.is_reported.is_(False)).first()
+        return User.query.filter(User.email == email).filter(
+            User.is_reported.is_(False), User.is_active.is_(True)).first()
 
     @staticmethod
     def update_user(user):
-        res = db.session.query(User).filter(user["email"] == User.email).update(user)
+        res = db.session.query(User).filter(
+            user["email"] == User.email).update(user)
         print(res)
         db.session.commit()
 
