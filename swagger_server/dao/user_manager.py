@@ -29,6 +29,10 @@ class UserManager(Manager):
         res = db.session.query(User).filter(
             user["email"] == User.email).update(user)
         db.session.commit()
+        if user["password"] is not None:
+            res = db.session.query(User).filter(user["email"] == User.email).first()
+            res.set_password(user["password"])
+            db.session.commit()
 
     @staticmethod
     def delete_user(user_id):
